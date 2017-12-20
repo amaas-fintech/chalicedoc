@@ -3,6 +3,7 @@
 test:
 	pipenv install
 	pipenv check --style chalicedoc.py
+	pipenv run python setup.py check -smr
 	pipenv run python -m pytest
 
 docs:
