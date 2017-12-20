@@ -1,9 +1,9 @@
-<document source="<string>" title="Testing">
+<document ids="testing" names="testing" source="<string>" title="Testing">
     <title>
         Testing
     <paragraph>
         A simple example.
-    <section>
+    <section ids="id1" names="/">
         <title>
             /
         <subtitle>
@@ -16,7 +16,7 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section>
+    <section ids="hello-name" names="/hello/{name}">
         <title>
             /hello/{name}
         <subtitle>
@@ -31,7 +31,7 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section>
+    <section ids="users" names="/users">
         <title>
             /users
         <subtitle>
@@ -44,13 +44,13 @@
             user_as_json = app.current_request.json_body
         <paragraph>
             We'll echo the json body back to the user in a 'user' key.
-        <section dupnames="returns" ids="id1">
+        <section dupnames="returns" ids="id2">
             <title>
                 Returns
             <paragraph>
                 <literal>
                     {'user': user_as_json}
-    <section>
+    <section ids="minimal" names="/minimal">
         <title>
             /minimal
         <subtitle>

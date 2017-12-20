@@ -28,6 +28,7 @@ def test_build():
     directives.register_directive('chalice', chalicedoc.ChaliceDirective)
     result = docutils.core.publish_string(RST_DOC)
     efn = os.path.join(os.path.dirname(__file__), 'sampleproject.txt')
+    # open(efn, 'wb').write(result)
     assert result == open(efn, 'rb').read()
 
 
@@ -36,4 +37,5 @@ def test_build_content():
     directives.register_directive('chalice', chalicedoc.ChaliceDirective)
     result = docutils.core.publish_string(RST_DOC_CONTENT)
     efn = os.path.join(os.path.dirname(__file__), 'sampleproject+content.txt')
+    # open(efn, 'wb').write(result)
     assert result == open(efn, 'rb').read()

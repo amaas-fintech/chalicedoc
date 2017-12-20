@@ -44,10 +44,13 @@ class ChaliceDirective(Directive):
 
     def run(self):
         """Parse chalice app docstrings."""
-        root = nodes.section()
         module, app = import_app(self.arguments[0])
         source = inspect.getfile(module)
+        # See RSTState.section for regular section creation logic.
+        root = nodes.section()
+        root['names'].append(nodes.fully_normalize_name(app.app_name))
         root += nodes.title(app.app_name, app.app_name.replace('_', ' ').title())
+        self.state.document.note_implicit_target(root, root)
         # If content is given use that, otherwise use module docstring.
         if self.content:
             nodeutil.nested_parse_with_titles(self.state, self.content, root)
@@ -56,8 +59,11 @@ class ChaliceDirective(Directive):
             nodeutil.nested_parse_with_titles(self.state, content, root)
         for path, routes in app.routes.items():
             section = nodes.section()
+            section['names'].append(nodes.fully_normalize_name(path))
             section += nodes.title(path, path)
+            self.state.document.note_implicit_target(section, section)
             for method, route in routes.items():
+                # Maybe make this another section+title?
                 section += nodes.subtitle(method, method)
                 content = get_doc_content(route.view_function, source=source)
                 nodeutil.nested_parse_with_titles(self.state, content, section)
