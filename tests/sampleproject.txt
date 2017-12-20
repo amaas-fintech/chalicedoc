@@ -31,6 +31,11 @@
             <paragraph>
                 <literal>
                     {'hello': name}
+    <section ids="minimal" names="/minimal">
+        <title>
+            /minimal
+        <subtitle>
+            GET
     <section ids="users" names="/users">
         <title>
             /users
@@ -50,8 +55,3 @@
             <paragraph>
                 <literal>
                     {'user': user_as_json}
-    <section ids="minimal" names="/minimal">
-        <title>
-            /minimal
-        <subtitle>
-            GET

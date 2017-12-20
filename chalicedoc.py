@@ -57,15 +57,16 @@ class ChaliceDirective(Directive):
         else:
             content = get_doc_content(module, source)
             nodeutil.nested_parse_with_titles(self.state, content, root)
-        for path, routes in app.routes.items():
+        for path in sorted(app.routes):
             section = nodes.section()
             section['names'].append(nodes.fully_normalize_name(path))
             section += nodes.title(path, path)
             self.state.document.note_implicit_target(section, section)
-            for method, route in routes.items():
+            routes = app.routes[path]
+            for method in sorted(routes):
                 # Maybe make this another section+title?
                 section += nodes.subtitle(method, method)
-                content = get_doc_content(route.view_function, source=source)
+                content = get_doc_content(routes[method].view_function, source=source)
                 nodeutil.nested_parse_with_titles(self.state, content, section)
 
             root += section
