@@ -8,10 +8,9 @@ name = "pypi"
 [packages]
 
 docutils = "*"
-sphinx = "*"
-chalice = "*"
+Sphinx = "*"
+
 pytest = "*"
 
 
 [dev-packages]
-

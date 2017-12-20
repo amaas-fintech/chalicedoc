@@ -1,0 +1,57 @@
+<document source="<string>" title="Testing">
+    <title>
+        Testing
+    <paragraph>
+        A simple example.
+    <section>
+        <title>
+            /
+        <subtitle>
+            GET
+        <paragraph>
+            Return {'hello': 'world'}.
+        <paragraph>
+            The view function above will return 
+            <literal>
+                {"hello": "world"}
+            
+            whenever you make an HTTP GET request to '/'.
+    <section>
+        <title>
+            /hello/{name}
+        <subtitle>
+            GET
+        <paragraph>
+            <literal>
+                '/hello/james' -> {"hello": "james"}
+            .
+        <section dupnames="returns" ids="returns">
+            <title>
+                Returns
+            <paragraph>
+                <literal>
+                    {'hello': name}
+    <section>
+        <title>
+            /users
+        <subtitle>
+            POST
+        <paragraph>
+            Create user.
+        <paragraph>
+            This is the JSON body the user sent in their POST request.
+        <literal_block xml:space="preserve">
+            user_as_json = app.current_request.json_body
+        <paragraph>
+            We'll echo the json body back to the user in a 'user' key.
+        <section dupnames="returns" ids="id1">
+            <title>
+                Returns
+            <paragraph>
+                <literal>
+                    {'user': user_as_json}
+    <section>
+        <title>
+            /minimal
+        <subtitle>
+            GET

@@ -45,3 +45,8 @@ def create_user():
     ``{'user': user_as_json}``
 
     """
+
+
+@app.route('/minimal')
+def no_doc():  # NoQA
+    pass

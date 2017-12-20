@@ -12,23 +12,23 @@ from docutils.statemachine import StringList
 import sphinx.util.nodes as nodeutil
 
 
-DEBUG = False
-
-
 def import_app(project_dir):
     """Import chalice app."""
     project_dir = os.path.realpath(project_dir)
-    try:
-        from chalice.cli import CLIFactory
-    except ImportError:
-        if project_dir not in sys.path:
-            sys.path.insert(0, project_dir)
+    if project_dir not in sys.path:
+        sys.path.insert(0, project_dir)
 
-        appmodule = importlib.import_module('app')
-        app = appmodule.app
-    else:
-        app = CLIFactory(project_dir, debug=DEBUG).load_chalice_app()
-    return app
+    module = importlib.import_module('app')
+    app = module.app
+    return module, app
+
+
+def get_doc_content(obj, source):
+    """Build a content block for parser consumption from an object docstring."""
+    doc = inspect.getdoc(obj) or ''
+    lines = statemachine.string2lines(doc)
+    block = StringList(lines, source=source)
+    return block
 
 
 class ChaliceDirective(Directive):
@@ -45,18 +45,22 @@ class ChaliceDirective(Directive):
     def run(self):
         """Parse chalice app docstrings."""
         root = nodes.section()
-        app = import_app(self.arguments[0])
+        module, app = import_app(self.arguments[0])
+        source = inspect.getfile(module)
         root += nodes.title(app.app_name, app.app_name.replace('_', ' ').title())
-        nodeutil.nested_parse_with_titles(self.state, self.content, root)
+        # If content is given use that, otherwise use module docstring.
+        if self.content:
+            nodeutil.nested_parse_with_titles(self.state, self.content, root)
+        else:
+            content = get_doc_content(module, source)
+            nodeutil.nested_parse_with_titles(self.state, content, root)
         for path, routes in app.routes.items():
             section = nodes.section()
             section += nodes.title(path, path)
             for method, route in routes.items():
                 section += nodes.subtitle(method, method)
-                doc = inspect.getdoc(route.view_function) or ''
-                lines = statemachine.string2lines(doc)
-                block = StringList(lines, source='<chalice:{}>'.format(app.app_name))
-                nodeutil.nested_parse_with_titles(self.state, block, section)
+                content = get_doc_content(route.view_function, source=source)
+                nodeutil.nested_parse_with_titles(self.state, content, section)
 
             root += section
 
