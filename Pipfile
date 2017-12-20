@@ -11,6 +11,7 @@ docutils = "*"
 Sphinx = "*"
 
 pytest = "*"
+chalice = "*"
 
 
 [dev-packages]
