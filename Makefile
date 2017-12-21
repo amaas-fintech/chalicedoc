@@ -10,5 +10,10 @@ docs:
 	pipenv install
 	pipenv run sphinx-build docs docs/_build
 
+dist:
+	pipenv install --dev
+	pipenv run python setup.py sdist bdist_wheel
+
 clean:
-	rm -r docs/_build
+	rm -rf build chalicedoc.egg-info dist
+	rm -rf docs/_build

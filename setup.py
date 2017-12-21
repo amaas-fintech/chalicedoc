@@ -34,7 +34,8 @@ if __name__ == '__main__':
         url='https://github.com/amaas-fintech/chalicedoc',
 
         py_modules=['chalicedoc'],
-        # TODO: license='',
+
+        license='Apache License Version 2.0',
         description=__doc__,
         long_description=readme(),
         # platforms=None,
@@ -43,7 +44,7 @@ if __name__ == '__main__':
             'Environment :: Plugins',
             'Framework :: Sphinx :: Extension',
             'Intended Audience :: Developers',
-            # 'License :: OSI Approved :: ',
+            'License :: OSI Approved :: Apache Software License',
             'Natural Language :: English',
             'Operating System :: OS Independent',
             'Programming Language :: Python',
@@ -60,6 +61,7 @@ if __name__ == '__main__':
         # provides=[],
         # requires=[],
         # obsoletes=[],
+
         install_requires=[
             'docutils',
             'sphinx',
