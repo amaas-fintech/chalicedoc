@@ -8,7 +8,7 @@ name = "pypi"
 [packages]
 
 docutils = "*"
-sphinx = "*"
+Sphinx = "*"
 
 pytest = "*"
 chalice = "*"
@@ -17,3 +17,4 @@ chalice = "*"
 [dev-packages]
 
 wheel = "*"
+twine = "*"

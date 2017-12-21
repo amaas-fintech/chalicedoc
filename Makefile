@@ -1,4 +1,4 @@
-.PHONY: test docs clean
+.PHONY: test docs clean release
 
 test:
 	pipenv install
@@ -13,6 +13,9 @@ docs:
 dist:
 	pipenv install --dev
 	pipenv run python setup.py sdist bdist_wheel
+
+release: test dist
+	pipenv run twine upload dist/*
 
 clean:
 	rm -rf build chalicedoc.egg-info dist
