@@ -46,6 +46,29 @@ class ChaliceDirective(Directive):
         """Parse chalice app docstrings."""
         module, app = import_app(self.arguments[0])
         source = inspect.getfile(module)
+        root = self.build_app_doc(module, app, source)
+        for path in sorted(app.routes):
+            routes = app.routes[path]
+            # Group routes with multiple methods
+            reversed_routes = {}
+            for method in routes:
+                view_function = routes[method].view_function
+                reversed_routes.setdefault(view_function, set()).add(method)
+
+            for view_function in sorted(reversed_routes):
+                methods = reversed_routes[view_function]
+                section = self.build_route_doc(sorted(methods), path, view_function, source)
+                root += section
+
+        return [root]
+
+    def build_app_doc(self, module, app, source):
+        """
+        Build overall Chalice app documentation.
+
+        Heading comes from app name.
+        Body comes from directive content or module docstring.
+        """
         # See RSTState.section for regular section creation logic.
         root = nodes.section()
         root['names'].append(nodes.fully_normalize_name(app.app_name))
@@ -57,21 +80,27 @@ class ChaliceDirective(Directive):
         else:
             content = get_doc_content(module, source)
             nodeutil.nested_parse_with_titles(self.state, content, root)
-        for path in sorted(app.routes):
-            section = nodes.section()
-            section['names'].append(nodes.fully_normalize_name(path))
-            section += nodes.title(path, path)
-            self.state.document.note_implicit_target(section, section)
-            routes = app.routes[path]
-            for method in sorted(routes):
-                # Maybe make this another section+title?
-                section += nodes.subtitle(method, method)
-                content = get_doc_content(routes[method].view_function, source=source)
-                nodeutil.nested_parse_with_titles(self.state, content, section)
 
-            root += section
+        return root
 
-        return [root]
+    def build_route_doc(self, methods, path, view_function, source):
+        """Build documentation for an individual route from view_function docstring."""
+        section = nodes.section()
+        section['names'].append(nodes.fully_normalize_name(path))
+        # Add title
+        title_src = ' '.join(methods + [path])
+        title = nodes.title(title_src)
+        for method in methods:
+            title += [nodes.strong(method, method), nodes.Text(' ')]
+
+        title += nodes.Text(path)
+        section += title
+        # Add content
+        self.state.document.note_implicit_target(section, section)
+        content = get_doc_content(view_function, source=source)
+        nodeutil.nested_parse_with_titles(self.state, content, section)
+        return section
+
 
 
 def setup(app):

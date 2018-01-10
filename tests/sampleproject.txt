@@ -5,9 +5,10 @@
         Sample chalice app with docstrings.
     <section ids="id1" names="/">
         <title>
+            <strong>
+                GET
+             
             /
-        <subtitle>
-            GET
         <paragraph>
             Return {'hello': 'world'}.
         <paragraph>
@@ -18,9 +19,10 @@
             whenever you make an HTTP GET request to '/'.
     <section ids="hello-name" names="/hello/{name}">
         <title>
+            <strong>
+                GET
+             
             /hello/{name}
-        <subtitle>
-            GET
         <paragraph>
             <literal>
                 '/hello/james' -> {"hello": "james"}
@@ -33,14 +35,16 @@
                     {'hello': name}
     <section ids="minimal" names="/minimal">
         <title>
+            <strong>
+                GET
+             
             /minimal
-        <subtitle>
-            GET
     <section ids="users" names="/users">
         <title>
+            <strong>
+                POST
+             
             /users
-        <subtitle>
-            POST
         <paragraph>
             Create user.
         <paragraph>
