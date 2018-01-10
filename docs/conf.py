@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Chalicedoc'
-copyright = '{year:%Y}, Joshua Ringer'.format(year=datetime.date.today())
+copyright = '{year:%Y} AMaaS Pte. Ltd.'.format(year=datetime.date.today())
 author = 'Joshua Ringer'
 
 # The version info for the project you're documenting, acts as replacement for
