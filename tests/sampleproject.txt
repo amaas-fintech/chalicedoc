@@ -22,6 +22,9 @@
             <strong>
                 GET
              
+            <strong>
+                POST
+             
             /hello/{name}
         <paragraph>
             <literal>

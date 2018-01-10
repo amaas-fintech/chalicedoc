@@ -15,7 +15,7 @@ def index():
     """
 
 
-@app.route('/hello/{name}')
+@app.route('/hello/{name}', methods=['GET', 'POST'])
 def hello_name(name):
     """
     ``'/hello/james' -> {"hello": "james"}``.
