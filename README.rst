@@ -22,7 +22,7 @@ extensions list in *conf.py*::
 Next, within your .rst source, use the "chalice" directive to scan your app
 for docstrings::
 
-  .. chalice: path/to/chalice/project
+  .. chalice:project:: path/to/chalice/project
 
 This will product output as follows:
 
