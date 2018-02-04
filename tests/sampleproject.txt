@@ -3,7 +3,7 @@
         Testing
     <paragraph>
         Sample chalice app with docstrings.
-    <section ids="id1" names="/">
+    <section ids="index" names="/ index">
         <title>
             <strong>
                 GET
@@ -17,7 +17,7 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section ids="hello-name" names="/hello/{name}">
+    <section ids="hello-name" names="/hello/{name} hello_name">
         <title>
             <strong>
                 GET
@@ -36,13 +36,42 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section ids="minimal" names="/minimal">
+    <section ids="minimal" names="/minimal no_doc">
         <title>
             <strong>
                 GET
              
             /minimal
-    <section ids="users" names="/users">
+    <section ids="refs" names="/refs xref">
+        <title>
+            <strong>
+                GET
+             
+            /refs
+        <paragraph>
+            Cross-reference example.
+        <paragraph>
+            This docstring contains a cross-reference to 
+            <problematic ids="id2" refid="id1">
+                :chalice:route:`GET /`
+            .
+        <system_message backrefs="id2" ids="id1" level="3" line="3" source="<string>" type="ERROR">
+            <paragraph>
+                Unknown interpreted text role "chalice:route".
+        <paragraph>
+            You can also use the
+            <reference name=":any:" refuri="http://www.sphinx-doc.org/en/stable/markup/inline.html#role-any">
+                :any:
+            <target ids="any" names=":any:" refuri="http://www.sphinx-doc.org/en/stable/markup/inline.html#role-any">
+            
+            functionality: 
+            <problematic ids="id4" refid="id3">
+                :any:`GET /`
+            .
+        <system_message backrefs="id4" ids="id3" level="3" line="5" source="<string>" type="ERROR">
+            <paragraph>
+                Unknown interpreted text role "any".
+    <section ids="users" names="/users create_user">
         <title>
             <strong>
                 POST
@@ -56,7 +85,7 @@
             user_as_json = app.current_request.json_body
         <paragraph>
             We'll echo the json body back to the user in a 'user' key.
-        <section dupnames="returns" ids="id2">
+        <section dupnames="returns" ids="id5">
             <title>
                 Returns
             <paragraph>
