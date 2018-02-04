@@ -1,0 +1,64 @@
+<document ids="testing" names="testing" source="tests/test.rst" title="Testing">
+    <title>
+        Testing
+    <paragraph>
+        Sample chalice app with docstrings.
+    <section ids="id1" names="/">
+        <title>
+            <strong>
+                GET
+             
+            /
+        <paragraph>
+            Return {'hello': 'world'}.
+        <paragraph>
+            The view function above will return 
+            <literal>
+                {"hello": "world"}
+            
+            whenever you make an HTTP GET request to '/'.
+    <section ids="hello-name" names="/hello/{name}">
+        <title>
+            <strong>
+                GET
+             
+            <strong>
+                POST
+             
+            /hello/{name}
+        <paragraph>
+            <literal>
+                '/hello/james' -> {"hello": "james"}
+            .
+        <section dupnames="returns" ids="returns">
+            <title>
+                Returns
+            <paragraph>
+                <literal>
+                    {'hello': name}
+    <section ids="minimal" names="/minimal">
+        <title>
+            <strong>
+                GET
+             
+            /minimal
+    <section ids="users" names="/users">
+        <title>
+            <strong>
+                POST
+             
+            /users
+        <paragraph>
+            Create user.
+        <paragraph>
+            This is the JSON body the user sent in their POST request.
+        <literal_block xml:space="preserve">
+            user_as_json = app.current_request.json_body
+        <paragraph>
+            We'll echo the json body back to the user in a 'user' key.
+        <section dupnames="returns" ids="id2">
+            <title>
+                Returns
+            <paragraph>
+                <literal>
+                    {'user': user_as_json}

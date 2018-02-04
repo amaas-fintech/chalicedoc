@@ -89,6 +89,22 @@ class ChaliceBaseDirective(Directive):
         return section
 
 
+def project_rel_validate(value):
+    """Validate rel option on project directive."""
+    choices = {'cwd', 'src'}
+    if not value:
+        # default value
+        return 'cwd'
+
+    try:
+        if value.strip().lower() not in choices:
+            raise ValueError('rel must be one of {}'.format('|'.join(choices)))
+    except AttributeError:
+        raise TypeError('rel must be a string')
+
+    return value
+
+
 class ProjectDirective(ChaliceBaseDirective):
     """
     Chalice project directive.
@@ -99,11 +115,19 @@ class ProjectDirective(ChaliceBaseDirective):
     """
 
     required_arguments = 1
+    option_spec = {
+        'rel': project_rel_validate,
+    }
     has_content = True
 
     def run(self):
         """Parse chalice project docstrings."""
-        project_dir = os.path.realpath(self.arguments[0])
+        if self.options.get('rel') == 'src':
+            source_dir = os.path.dirname(self.state_machine.document.attributes['source'])
+            project_dir = os.path.realpath(os.path.join(source_dir, self.arguments[0]))
+        else:
+            project_dir = os.path.realpath(self.arguments[0])
+
         if project_dir not in sys.path:
             sys.path.insert(0, project_dir)
 
@@ -117,8 +141,8 @@ class AppDirective(ChaliceBaseDirective):
 
     The app directive collects a Chalice app routes and extracts docstring
     documentation for each of them. The directive assumes that the app referred
-    to is already in the global namespace or importable from the system path.
-    You should ensure this in your Sphinx conf.py.
+    to is already in the global namespace or importable from the current system
+    path.
     """
 
     optional_arguments = 1
