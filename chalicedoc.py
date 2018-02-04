@@ -37,13 +37,13 @@ class ChaliceBaseDirective(Directive):
         for path in sorted(app.routes):
             routes = app.routes[path]
             # Group routes with multiple methods
-            reversed_routes = {}
+            inverted_routes = {}
             for method in routes:
                 view_function = routes[method].view_function
-                reversed_routes.setdefault(view_function, set()).add(method)
+                inverted_routes.setdefault(view_function, set()).add(method)
 
-            for view_function in sorted(reversed_routes):
-                methods = reversed_routes[view_function]
+            for view_function in sorted(inverted_routes):
+                methods = inverted_routes[view_function]
                 section = self.build_route_doc(sorted(methods), path, view_function, source)
                 root += section
 
@@ -61,6 +61,8 @@ class ChaliceBaseDirective(Directive):
         root['names'].append(nodes.fully_normalize_name(app.app_name))
         root += nodes.title(app.app_name, app.app_name.replace('_', ' ').title())
         self.state.document.note_implicit_target(root, root)
+        # Add cross-reference
+        self.add_xref('app', app.app_name, root['ids'][0])
         # If content is given use that, otherwise use module docstring.
         if self.content:
             nodeutil.nested_parse_with_titles(self.state, self.content, root)
@@ -73,20 +75,46 @@ class ChaliceBaseDirective(Directive):
     def build_route_doc(self, methods, path, view_function, source):
         """Build documentation for an individual route from view_function docstring."""
         section = nodes.section()
-        section['names'].append(nodes.fully_normalize_name(path))
+        section['names'].extend([
+            nodes.fully_normalize_name(path),
+            view_function.__name__,
+        ])
+        self.state.document.note_implicit_target(section, section)
+        sid = section['ids'][0]
         # Add title
         title_src = ' '.join(methods + [path])
         title = nodes.title(title_src)
         for method in methods:
             title += [nodes.strong(method, method), nodes.Text(' ')]
+            # ...add cross-reference
+            self.add_xref('route', '{} {}'.format(method, path), sid)
 
         title += nodes.Text(path)
         section += title
         # Add content
-        self.state.document.note_implicit_target(section, section)
         content = get_doc_content(view_function, source=source)
         nodeutil.nested_parse_with_titles(self.state, content, section)
         return section
+
+    def add_xref(self, objtyp, target, targetid):
+        """Add cross-reference record for an element."""
+        try:
+            env = self.state.document.settings.env
+        except AttributeError:
+            # We're in regular docutils, not sphinx, so skip.
+            return
+
+        refs = env.domaindata['chalice']['route']
+        if target in refs:
+            msg = 'Duplicate {} reference {!r}, other instance in {}'
+            src = env.doc2path(refs[target][0])
+            self.state_machine.reporter.warning(
+                msg.format(objtyp, target, src),
+                line=self.lineno,
+            )
+
+        docname = env.docname
+        refs[target] = (docname, targetid)
 
 
 def project_rel_validate(value):
@@ -123,7 +151,7 @@ class ProjectDirective(ChaliceBaseDirective):
     def run(self):
         """Parse chalice project docstrings."""
         if self.options.get('rel') == 'src':
-            source_dir = os.path.dirname(self.state_machine.document.attributes['source'])
+            source_dir = os.path.dirname(self.state.document.attributes['source'])
             project_dir = os.path.realpath(os.path.join(source_dir, self.arguments[0]))
         else:
             project_dir = os.path.realpath(self.arguments[0])

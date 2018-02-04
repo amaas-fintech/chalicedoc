@@ -50,3 +50,14 @@ def create_user():
 @app.route('/minimal')
 def no_doc():  # NoQA
     pass
+
+
+@app.route('/refs')
+def xref():
+    """
+    Cross-reference example.
+
+    This docstring contains a cross-reference to :chalice:route:`GET /`.
+
+    You can also use the ``:any:`` functionality: `GET /`.
+    """
