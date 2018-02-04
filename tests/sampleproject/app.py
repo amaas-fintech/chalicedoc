@@ -59,5 +59,7 @@ def xref():
 
     This docstring contains a cross-reference to :chalice:route:`GET /`.
 
-    You can also use the ``:any:`` functionality: `GET /`.
+    You can also use the
+    `:any: <http://www.sphinx-doc.org/en/stable/markup/inline.html#role-any>`_
+    functionality: :any:`GET /`.
     """
