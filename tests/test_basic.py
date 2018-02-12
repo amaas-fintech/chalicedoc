@@ -11,10 +11,10 @@ import chalicedoc
 
 
 RST_DOC = '''
-.. test:: sampleproject
+.. test:: test-project
 '''
 RST_DOC_REL = '''
-.. test:: sampleproject
+.. test:: test-project
    :rel: src
 
 '''
@@ -33,7 +33,7 @@ def test_build():
     try:
         directives.register_directive('test', chalicedoc.ProjectDirective)
         result = docutils.core.publish_string(RST_DOC)
-        efn = os.path.join(os.path.dirname(__file__), 'sampleproject.txt')
+        efn = os.path.join(os.path.dirname(__file__), 'test_basic_build.txt')
         # open(efn, 'wb').write(result)
         assert result.decode() == open(efn, 'rb').read().decode()
     finally:
@@ -54,7 +54,7 @@ def test_build_rel():
         directives.register_directive('test', chalicedoc.ProjectDirective)
         test_path = os.path.join(here, 'test.rst')
         result = docutils.core.publish_string(RST_DOC_REL, source_path=test_path)
-        efn = os.path.join(os.path.dirname(__file__), 'sampleproject+rel.txt')
+        efn = os.path.join(os.path.dirname(__file__), 'test_basic_rel.txt')
         # open(efn, 'wb').write(result)
         assert result.decode() == open(efn, 'rb').read().decode()
     finally:
@@ -65,11 +65,11 @@ def test_build_rel():
 
 def test_build_content():
     """Test rst parse with added content on app directive."""
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'sampleproject'))
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'test-project'))
     try:
         directives.register_directive('test', chalicedoc.AppDirective)
         result = docutils.core.publish_string(RST_DOC_CONTENT)
-        efn = os.path.join(os.path.dirname(__file__), 'sampleproject+content.txt')
+        efn = os.path.join(os.path.dirname(__file__), 'test_basic_content.txt')
         # open(efn, 'wb').write(result)
         assert result.decode() == open(efn, 'rb').read().decode()
     finally:
