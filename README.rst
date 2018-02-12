@@ -19,8 +19,8 @@ extensions list in *conf.py*::
       'chalicedoc',
   ]
 
-Next, within your .rst source, use the "chalice" directive to scan your app
-for docstrings::
+Next, within your .rst source, use the "chalice:project" directive to scan your
+app for docstrings::
 
   .. chalice:project:: path/to/chalice/project
 

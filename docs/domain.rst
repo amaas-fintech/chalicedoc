@@ -47,7 +47,9 @@ The ``chalice:app`` role refers to the chalice application as a whole. The name
 used for the reference will be the app_name as specified when defining the
 Chalice app.
 
-E.g. a chalice app defined in your *app.py* as::
+E.g. a chalice app defined in your *app.py* as:
+
+.. code-block:: python3
 
    app = Chalice(app_name='example')
 
@@ -60,7 +62,9 @@ Route
 The ``chalice:route`` role refers to individual routes within the application.
 Routes are referred to by their method in caps, followed by the path.
 
-E.g. a routes defined in your *app.py* as::
+E.g. a routes defined in your *app.py* as:
+
+.. code-block:: python3
 
    @app.route('/example', methods=['GET'])
 
