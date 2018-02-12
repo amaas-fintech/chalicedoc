@@ -9,5 +9,6 @@
    :maxdepth: 2
    :hidden:
 
+   domain
    example
    Module Docs <chalicedoc>

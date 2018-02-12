@@ -4,7 +4,7 @@ Chalicedoc
 
 Chalicedoc makes documenting Chalice applications easier.
 
-This module adds a "chalice" directive for reStructuredText, which can be
+This module adds a "chalice" domain for reStructuredText, which can be
 used by Sphinx/docutils to autogenerate documentation of your chalice routes
 using the docstrings in your Chalice app.
 
