@@ -160,11 +160,16 @@ class ProjectDirective(ChaliceBaseDirective):
             sys.path.insert(0, project_dir)
 
         # Clear old import if there already
-        if 'app' in sys.modules:
-            del sys.modules['app']
-
-        module = importlib.import_module('app')
-        return self.build_doc(module)
+        sys.modules.pop('app', None)
+        sys_modules = set(sys.modules.keys())
+        try:
+            module = importlib.import_module('app')
+            return self.build_doc(module)
+        finally:
+            # Remove any modules added
+            to_remove = set(sys.modules.keys()) - sys_modules
+            for key in to_remove:
+                del sys.modules[key]
 
 
 class AppDirective(ChaliceBaseDirective):
@@ -184,11 +189,16 @@ class AppDirective(ChaliceBaseDirective):
         """Parse chalice app docstrings."""
         name = self.arguments[0] if len(self.arguments) > 0 else 'app'
         # Clear old import if there already
-        if name in sys.modules:
-            del sys.modules[name]
-
-        module = importlib.import_module(name)
-        return self.build_doc(module)
+        sys.modules.pop(name, None)
+        sys_modules = set(sys.modules.keys())
+        try:
+            module = importlib.import_module(name)
+            return self.build_doc(module)
+        finally:
+            # Remove any modules added
+            to_remove = set(sys.modules.keys()) - sys_modules
+            for key in to_remove:
+                del sys.modules[key]
 
 
 class ChaliceDomain(Domain):
