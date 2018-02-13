@@ -7,7 +7,7 @@
         <section ids="first" names="first">
             <title>First</title>
             <paragraph>A first app.</paragraph>
-            <section ids="a" names="/a index">
+            <section ids="a" names="/a index_a">
                 <title><strong>GET</strong> /a</title>
                 <paragraph>Project A.</paragraph>
             </section>
@@ -15,7 +15,7 @@
         <section ids="second" names="second">
             <title>Second</title>
             <paragraph>A second app.</paragraph>
-            <section ids="b" names="/b index">
+            <section ids="b" names="/b index_b">
                 <title><strong>GET</strong> /b</title>
                 <paragraph>Project B.</paragraph>
             </section>

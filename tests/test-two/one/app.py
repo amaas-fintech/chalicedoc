@@ -6,5 +6,5 @@ app = Chalice(app_name='first')
 
 
 @app.route('/a')
-def index():
+def index_a():
     """Project A."""
