@@ -11,10 +11,10 @@ import chalicedoc
 
 
 RST_DOC = '''
-.. test:: test-project
+.. test:: test-project/sample
 '''
 RST_DOC_REL = '''
-.. test:: test-project
+.. test:: test-project/sample
    :rel: src
 
 '''
@@ -65,7 +65,7 @@ def test_build_rel():
 
 def test_build_content():
     """Test rst parse with added content on app directive."""
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'test-project'))
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'test-project', 'sample'))
     try:
         directives.register_directive('test', chalicedoc.AppDirective)
         result = docutils.core.publish_string(RST_DOC_CONTENT)
