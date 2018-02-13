@@ -35,3 +35,24 @@ def test_build(app, warning):
         assert warning.getvalue() == ''
     finally:
         shutil.rmtree(app.srcdir)
+
+
+@pytest.mark.sphinx('xml', testroot='two')
+def test_two(app, warning):
+    """Test sphinx build of multiple chalice projects."""
+    try:
+        app.builder.build_all()
+
+        result = app.outdir / 'contents.xml'
+        expected = path(os.path.dirname(__file__)) / 'test_sphinx_two.xml'
+        # expected.write_bytes(result.bytes())
+        # strip top lines
+        res_text = result.text()
+        res_text = res_text[re.search(r'<document[^>]*>', res_text).end():]
+        exp_text = expected.text()
+        exp_text = exp_text[re.search(r'<document[^>]*>', exp_text).end():]
+        assert res_text == exp_text
+
+        assert warning.getvalue() == ''
+    finally:
+        shutil.rmtree(app.srcdir)
