@@ -32,13 +32,27 @@ def create_user():
     """
     Create user.
 
-    This is the JSON body the user sent in their POST request.
-
-    ::
+    This is the JSON body the user sent in their POST request::
 
         user_as_json = app.current_request.json_body
 
     We'll echo the json body back to the user in a 'user' key.
+
+    Returns
+    -------
+    ``{'user': user_as_json}``
+
+    """
+
+
+@app.route('/users', methods=['GET'])
+def get_user():
+    """
+    Get user.
+
+    Return user information as sent in query parameters::
+
+        user_as_json = app.current_request.query_params
 
     Returns
     -------
@@ -61,5 +75,5 @@ def xref():
 
     You can also use the
     `:any: <http://www.sphinx-doc.org/en/stable/markup/inline.html#role-any>`_
-    functionality: :any:`GET /`.
+    functionality: :any:`GET /hello/{name}`.
     """

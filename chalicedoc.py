@@ -42,7 +42,7 @@ class ChaliceBaseDirective(Directive):
                 view_function = routes[method].view_function
                 inverted_routes.setdefault(view_function, set()).add(method)
 
-            for view_function in sorted(inverted_routes):
+            for view_function in sorted(inverted_routes, key=lambda f: f.__name__):
                 methods = inverted_routes[view_function]
                 section = self.build_route_doc(sorted(methods), path, view_function, source)
                 root += section

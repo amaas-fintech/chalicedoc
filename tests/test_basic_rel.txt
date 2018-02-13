@@ -66,12 +66,12 @@
             
             functionality: 
             <problematic ids="id4" refid="id3">
-                :any:`GET /`
+                :any:`GET /hello/{name}`
             .
         <system_message backrefs="id4" ids="id3" level="3" line="5" source="tests/test.rst" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
-    <section ids="users" names="/users create_user">
+    <section dupnames="/users" ids="users" names="create_user">
         <title>
             <strong>
                 POST
@@ -80,12 +80,30 @@
         <paragraph>
             Create user.
         <paragraph>
-            This is the JSON body the user sent in their POST request.
+            This is the JSON body the user sent in their POST request:
         <literal_block xml:space="preserve">
             user_as_json = app.current_request.json_body
         <paragraph>
             We'll echo the json body back to the user in a 'user' key.
         <section dupnames="returns" ids="id5">
+            <title>
+                Returns
+            <paragraph>
+                <literal>
+                    {'user': user_as_json}
+    <section dupnames="/users" ids="get-user" names="get_user">
+        <title>
+            <strong>
+                GET
+             
+            /users
+        <paragraph>
+            Get user.
+        <paragraph>
+            Return user information as sent in query parameters:
+        <literal_block xml:space="preserve">
+            user_as_json = app.current_request.query_params
+        <section dupnames="returns" ids="id6">
             <title>
                 Returns
             <paragraph>
