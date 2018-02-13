@@ -1,2 +1,2 @@
-.. chalice:project:: ../test-project
+.. chalice:project:: ../project
    :rel: src
