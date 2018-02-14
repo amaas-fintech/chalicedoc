@@ -10,7 +10,7 @@ import sys
 from docutils import nodes, statemachine
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
-import sphinx.util.nodes as nodeutil
+from sphinx.util import docutils, nodes as nodeutils
 from sphinx.domains import Domain, ObjType
 from sphinx.roles import XRefRole
 
@@ -109,35 +109,42 @@ class ChaliceBaseDirective(Directive):
         self.add_xref('app', app.app_name, root['ids'][0])
         # If content is given use that, otherwise use module docstring.
         if self.content:
-            nodeutil.nested_parse_with_titles(self.state, self.content, root)
+            nodeutils.nested_parse_with_titles(self.state, self.content, root)
         else:
             content = get_doc_content(module)
-            nodeutil.nested_parse_with_titles(self.state, content, root)
+            with docutils.switch_source_input(self.state, content):
+                # Necessary so that the child nodes get the right source/line
+                root.document = self.state.document
+                nodeutils.nested_parse_with_titles(self.state, content, root)
 
         return root
 
     def build_route_doc(self, methods, path, view_function):
         """Build documentation for an individual route from view_function docstring."""
         section = nodes.section()
-        section['names'].extend([
-            nodes.fully_normalize_name(path),
-            view_function.__name__,
-        ])
-        self.state.document.note_implicit_target(section, section)
-        sid = section['ids'][0]
-        # Add title
-        title_src = ' '.join(methods + [path])
-        title = nodes.title(title_src)
-        for method in methods:
-            title += [nodes.strong(method, method), nodes.Text(' ')]
-            # ...add cross-reference
-            self.add_xref('route', '{} {}'.format(method, path), sid)
-
-        title += nodes.Text(path)
-        section += title
-        # Add content
         content = get_doc_content(view_function)
-        nodeutil.nested_parse_with_titles(self.state, content, section)
+        with docutils.switch_source_input(self.state, content):
+            # Necessary so that the child nodes get the right source/line
+            section.document = self.state.document
+            section['names'].extend([
+                nodes.fully_normalize_name(path),
+                view_function.__name__,
+            ])
+            self.state.document.note_implicit_target(section, section)
+            sid = section['ids'][0]
+            # Add title
+            title_src = ' '.join(methods + [path])
+            title = nodes.title(title_src)
+            for method in methods:
+                title += [nodes.strong(method, method), nodes.Text(' ')]
+                # ...add cross-reference
+                self.add_xref('route', '{} {}'.format(method, path), sid)
+
+            title += nodes.Text(path)
+            section += title
+            # Add content
+            nodeutils.nested_parse_with_titles(self.state, content, section)
+
         return section
 
     def add_xref(self, objtyp, target, targetid):
@@ -306,7 +313,7 @@ class ChaliceDomain(Domain):
             except KeyError:
                 pass
             else:
-                return nodeutil.make_refnode(
+                return nodeutils.make_refnode(
                     builder, fromdocname, todocname, targetid, contnode,
                 )
 
@@ -322,7 +329,7 @@ class ChaliceDomain(Domain):
             else:
                 results.append((
                     '{}:{}'.format(self.name, self.role_for_objtype(objtyp)),
-                    nodeutil.make_refnode(
+                    nodeutils.make_refnode(
                         builder, fromdocname, todocname, targetid, contnode,
                     )
                 ))
