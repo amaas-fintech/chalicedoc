@@ -1,6 +1,7 @@
 """Chalicedoc provides a chalice directive for reStructuredText parsing of Chalice apps."""
 __version__ = '0.2.1'
 
+import contextlib
 import importlib
 import inspect
 import os.path
@@ -12,6 +13,31 @@ from docutils.statemachine import StringList
 import sphinx.util.nodes as nodeutil
 from sphinx.domains import Domain, ObjType
 from sphinx.roles import XRefRole
+
+
+@contextlib.contextmanager
+def isolated_import(name):
+    """
+    Import a module in an isolated manner.
+
+    Provides the module as context within a with statement:
+
+    >>> with isolated_import(name) as module:
+    ...     module.function()
+
+    Cleans up import after, close to as if never imported.
+    """
+    existing = sys.modules.get(name, None)
+    sys_modules = set(sys.modules.keys())
+    # import module and release to context
+    yield importlib.import_module(name)
+    # clean up import
+    to_remove = set(sys.modules.keys()) - sys_modules
+    for key in to_remove:
+        del sys.modules[key]
+
+    if existing:
+        sys.modules[name] = existing
 
 
 def get_doc_content(obj):
@@ -161,20 +187,17 @@ class ProjectDirective(ChaliceBaseDirective):
         else:
             project_dir = os.path.realpath(self.arguments[0])
 
+        ins = False
         if project_dir not in sys.path:
             sys.path.insert(0, project_dir)
+            ins = True
 
-        # Clear old import if there already
-        sys.modules.pop('app', None)
-        sys_modules = set(sys.modules.keys())
         try:
-            module = importlib.import_module('app')
-            return self.build_doc(module)
+            with isolated_import('app') as module:
+                return self.build_doc(module)
         finally:
-            # Remove any modules added
-            to_remove = set(sys.modules.keys()) - sys_modules
-            for key in to_remove:
-                del sys.modules[key]
+            if ins:
+                sys.path.pop(0)
 
 
 class AppDirective(ChaliceBaseDirective):
@@ -193,17 +216,8 @@ class AppDirective(ChaliceBaseDirective):
     def run(self):
         """Parse chalice app docstrings."""
         name = self.arguments[0] if len(self.arguments) > 0 else 'app'
-        # Clear old import if there already
-        sys.modules.pop(name, None)
-        sys_modules = set(sys.modules.keys())
-        try:
-            module = importlib.import_module(name)
+        with isolated_import(name) as module:
             return self.build_doc(module)
-        finally:
-            # Remove any modules added
-            to_remove = set(sys.modules.keys()) - sys_modules
-            for key in to_remove:
-                del sys.modules[key]
 
 
 class ChaliceDomain(Domain):
