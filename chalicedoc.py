@@ -14,26 +14,31 @@ from sphinx.domains import Domain, ObjType
 from sphinx.roles import XRefRole
 
 
-def get_doc_content(obj, source):
+def get_doc_content(obj):
     """Build a content block for parser consumption from an object docstring."""
     doc = inspect.getdoc(obj) or ''
     lines = statemachine.string2lines(doc)
-    block = StringList(lines, source=source)
-    return block
+    source = inspect.getsourcefile(obj)
+    srclines, startline = inspect.getsourcelines(obj)
+    for add, line in enumerate(srclines):
+        if line.lstrip()[0] in ("'", '"'):
+            startline += add
+            break
+
+    items = [(source, i) for i in range(startline, startline + len(lines))]
+    return StringList(lines, items=items)
 
 
 class ChaliceBaseDirective(Directive):
     """Chalice directive baseclass."""
 
-    def build_doc(self, module, app=None, source=None):
+    def build_doc(self, module, app=None):
         """Build full docs for Chalice app."""
         if not app:
             # Standard Chalice location
             app = module.app
-        if not source:
-            source = inspect.getfile(module)
 
-        root = self.build_app_doc(module, app, source)
+        root = self.build_app_doc(module, app)
         for path in sorted(app.routes):
             routes = app.routes[path]
             # Group routes with multiple methods
@@ -44,12 +49,12 @@ class ChaliceBaseDirective(Directive):
 
             for view_function in sorted(inverted_routes, key=lambda f: f.__name__):
                 methods = inverted_routes[view_function]
-                section = self.build_route_doc(sorted(methods), path, view_function, source)
+                section = self.build_route_doc(sorted(methods), path, view_function)
                 root += section
 
         return [root]
 
-    def build_app_doc(self, module, app, source):
+    def build_app_doc(self, module, app):
         """
         Build overall Chalice app documentation.
 
@@ -67,12 +72,12 @@ class ChaliceBaseDirective(Directive):
         if self.content:
             nodeutil.nested_parse_with_titles(self.state, self.content, root)
         else:
-            content = get_doc_content(module, source)
+            content = get_doc_content(module)
             nodeutil.nested_parse_with_titles(self.state, content, root)
 
         return root
 
-    def build_route_doc(self, methods, path, view_function, source):
+    def build_route_doc(self, methods, path, view_function):
         """Build documentation for an individual route from view_function docstring."""
         section = nodes.section()
         section['names'].extend([
@@ -92,7 +97,7 @@ class ChaliceBaseDirective(Directive):
         title += nodes.Text(path)
         section += title
         # Add content
-        content = get_doc_content(view_function, source=source)
+        content = get_doc_content(view_function)
         nodeutil.nested_parse_with_titles(self.state, content, section)
         return section
 
