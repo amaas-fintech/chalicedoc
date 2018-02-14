@@ -44,23 +44,27 @@ def get_doc_content(obj):
     """Build a content block for parser consumption from an object docstring."""
     doc = inspect.getdoc(obj) or ''
     lines = statemachine.string2lines(doc)
-    source = inspect.getsourcefile(obj)
-    srclines, startline = inspect.getsourcelines(obj)
-    indoc = False
-    for add, line in enumerate(srclines):
-        line = line.strip()
-        if indoc:
-            if line:
+    if lines:
+        source = inspect.getsourcefile(obj)
+        srclines, startline = inspect.getsourcelines(obj)
+        indoc = False
+        for add, line in enumerate(srclines):
+            line = line.strip()
+            if indoc:
+                if line:
+                    startline += add
+                    break
+            elif line in ('"""', '"', "'''", "'"):
+                indoc = True
+                continue
+            elif line and line[0] in ('"', "'"):
                 startline += add
                 break
-        elif line in ('"""', '"', "'''", "'"):
-            indoc = True
-            continue
-        elif line[0] in ('"', "'"):
-            startline += add
-            break
 
-    items = [(source, i) for i in range(startline, startline + len(lines))]
+        items = [(source, i) for i in range(startline, startline + len(lines))]
+    else:
+        items = []
+
     return StringList(lines, items=items)
 
 

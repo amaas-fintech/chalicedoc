@@ -11,7 +11,7 @@ def test_get_doc_content():
         ('create_user', 11, 33),
         ('get_user', 9, 52),
         ('no_doc', 0, None),
-        ('xref', 7, 72),
+        ('xref', 7, 73),
     ]
     pdir = os.path.join(os.path.dirname(__file__), 'test-project', 'sample')
     fname = os.path.join(pdir, 'app.py')

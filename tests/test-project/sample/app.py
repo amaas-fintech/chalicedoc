@@ -64,6 +64,7 @@ def get_user():
 
 @app.route('/minimal')
 def no_doc():  # NoQA
+
     pass
 
 
