@@ -5,11 +5,14 @@ Release Notes
 Version 0.x
 ===========
 
+v0.2.2 -- 14 Feb 2018
+---------------------
+* File/line reporting more accurately reflects the source location.
+
 v0.2.1 -- 13 Feb 2018
 ---------------------
 * Fix for including multiple projects in one documentation project.
 * Fix for using multiple functions under same route path.
-
 
 v0.2 -- 12 Feb 2018
 -------------------
