@@ -45,7 +45,7 @@ def create_user():
     """
 
 
-@app.route('/users',  # split to test get_doc_content
+@app.route('/users',  # split to test get_content
            methods=['GET'])
 def get_user():
     """

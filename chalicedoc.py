@@ -40,32 +40,35 @@ def isolated_import(name):
         sys.modules[name] = existing
 
 
-def get_doc_content(obj):
-    """Build a content block for parser consumption from an object docstring."""
+def get_content(obj):
+    """Build a content block for parser consumption from an object."""
+    source = inspect.getsourcefile(obj)
+    srclines, srcstart = inspect.getsourcelines(obj)
+    srcitems = [(source, i) for i in range(srcstart, srcstart + len(srclines))]
+
     doc = inspect.getdoc(obj) or ''
-    lines = statemachine.string2lines(doc)
-    if lines:
-        source = inspect.getsourcefile(obj)
-        srclines, startline = inspect.getsourcelines(obj)
+    doclines = statemachine.string2lines(doc)
+    if doclines:
+        docstart = srcstart
         indoc = False
         for add, line in enumerate(srclines):
             line = line.strip()
             if indoc:
                 if line:
-                    startline += add
+                    docstart += add
                     break
             elif line in ('"""', '"', "'''", "'"):
                 indoc = True
                 continue
             elif line and line[0] in ('"', "'"):
-                startline += add
+                docstart += add
                 break
 
-        items = [(source, i) for i in range(startline, startline + len(lines))]
+        docitems = [(source, i) for i in range(docstart, docstart + len(doclines))]
     else:
-        items = []
+        docitems = []
 
-    return StringList(lines, items=items)
+    return StringList(srclines, items=srcitems), StringList(doclines, items=docitems)
 
 
 class ChaliceBaseDirective(Directive):
@@ -111,7 +114,7 @@ class ChaliceBaseDirective(Directive):
         if self.content:
             nodeutils.nested_parse_with_titles(self.state, self.content, root)
         else:
-            content = get_doc_content(module)
+            _, content = get_content(module)
             with docutils.switch_source_input(self.state, content):
                 # Necessary so that the child nodes get the right source/line
                 root.document = self.state.document
@@ -122,8 +125,8 @@ class ChaliceBaseDirective(Directive):
     def build_route_doc(self, methods, path, view_function):
         """Build documentation for an individual route from view_function docstring."""
         section = nodes.section()
-        content = get_doc_content(view_function)
-        with docutils.switch_source_input(self.state, content):
+        srccontent, doccontent = get_content(view_function)
+        with docutils.switch_source_input(self.state, srccontent):
             # Necessary so that the child nodes get the right source/line
             section.document = self.state.document
             section['names'].extend([
@@ -143,7 +146,8 @@ class ChaliceBaseDirective(Directive):
             title += nodes.Text(path)
             section += title
             # Add content
-            nodeutils.nested_parse_with_titles(self.state, content, section)
+            with docutils.switch_source_input(self.state, doccontent):
+                nodeutils.nested_parse_with_titles(self.state, doccontent, section)
 
         return section
 
