@@ -1,6 +1,6 @@
 """Tests for Sphinx-specific functionality."""
-import os
-import re
+import os.path
+from string import Template
 import shutil
 
 import pytest
@@ -25,12 +25,10 @@ def test_build(app, warning):
         result = app.outdir / 'contents.xml'
         expected = path(os.path.dirname(__file__)) / 'test_sphinx_build.xml'
         # expected.write_bytes(result.bytes())
-        # strip top lines
-        res_text = result.text()
-        res_text = res_text[re.search(r'<document[^>]*>', res_text).end():]
-        exp_text = expected.text()
-        exp_text = exp_text[re.search(r'<document[^>]*>', exp_text).end():]
-        assert res_text == exp_text
+        exp_text = Template(expected.text()).substitute(
+            SOURCEFILE=app.srcdir / 'contents.rst'
+        )
+        assert result.text() == exp_text
 
         assert warning.getvalue() == ''
     finally:
@@ -46,12 +44,10 @@ def test_two(app, warning):
         result = app.outdir / 'contents.xml'
         expected = path(os.path.dirname(__file__)) / 'test_sphinx_two.xml'
         # expected.write_bytes(result.bytes())
-        # strip top lines
-        res_text = result.text()
-        res_text = res_text[re.search(r'<document[^>]*>', res_text).end():]
-        exp_text = expected.text()
-        exp_text = exp_text[re.search(r'<document[^>]*>', exp_text).end():]
-        assert res_text == exp_text
+        exp_text = Template(expected.text()).substitute(
+            SOURCEFILE=app.srcdir / 'contents.rst'
+        )
+        assert result.text() == exp_text
 
         assert warning.getvalue() == ''
     finally:

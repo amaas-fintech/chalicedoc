@@ -55,7 +55,7 @@
             <problematic ids="id2" refid="id1">
                 :chalice:route:`GET /`
             .
-        <system_message backrefs="id2" ids="id1" level="3" line="3" source="<string>" type="ERROR">
+        <system_message backrefs="id2" ids="id1" level="3" line="76" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "chalice:route".
         <paragraph>
@@ -68,7 +68,7 @@
             <problematic ids="id4" refid="id3">
                 :any:`GET /hello/{name}`
             .
-        <system_message backrefs="id4" ids="id3" level="3" line="5" source="<string>" type="ERROR">
+        <system_message backrefs="id4" ids="id3" level="3" line="78" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
     <section dupnames="/users" ids="users" names="create_user">

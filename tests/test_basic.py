@@ -2,6 +2,7 @@
 import copy
 import os
 import os.path
+from string import Template
 import sys
 
 import docutils.core
@@ -9,6 +10,8 @@ from docutils.parsers.rst import directives
 
 import chalicedoc
 
+
+SOURCEFILE = os.path.join(os.path.dirname(__file__), 'test-project', 'sample', 'app.py')
 
 RST_DOC = '''
 .. test:: test-project/sample
@@ -34,7 +37,8 @@ def test_build():
         result = docutils.core.publish_string(RST_DOC)
         efn = os.path.join(os.path.dirname(__file__), 'test_basic_build.txt')
         # open(efn, 'wb').write(result)
-        assert result.decode() == open(efn, 'rb').read().decode()
+        tpl = Template(open(efn, 'rb').read().decode())
+        assert result.decode() == tpl.substitute(SOURCEFILE=SOURCEFILE)
     finally:
         os.chdir(cwd)
 
@@ -53,7 +57,8 @@ def test_build_rel():
         result = docutils.core.publish_string(RST_DOC_REL, source_path=test_path)
         efn = os.path.join(os.path.dirname(__file__), 'test_basic_rel.txt')
         # open(efn, 'wb').write(result)
-        assert result.decode() == open(efn, 'rb').read().decode()
+        tpl = Template(open(efn, 'rb').read().decode())
+        assert result.decode() == tpl.substitute(SOURCEFILE=SOURCEFILE)
     finally:
         sys.path[:] = csp
         os.chdir(cwd)
@@ -67,6 +72,7 @@ def test_build_content():
         result = docutils.core.publish_string(RST_DOC_CONTENT)
         efn = os.path.join(os.path.dirname(__file__), 'test_basic_content.txt')
         # open(efn, 'wb').write(result)
-        assert result.decode() == open(efn, 'rb').read().decode()
+        tpl = Template(open(efn, 'rb').read().decode())
+        assert result.decode() == tpl.substitute(SOURCEFILE=SOURCEFILE)
     finally:
         sys.path.pop(0)
