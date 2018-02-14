@@ -28,7 +28,6 @@ RST_DOC_CONTENT = '''
 def test_build():
     """Test a simple rst parse with the project directive."""
     cwd = os.getcwd()
-    csp = copy.copy(sys.path)
     os.chdir(os.path.dirname(__file__))
     try:
         directives.register_directive('test', chalicedoc.ProjectDirective)
@@ -37,8 +36,6 @@ def test_build():
         # open(efn, 'wb').write(result)
         assert result.decode() == open(efn, 'rb').read().decode()
     finally:
-        sys.modules.pop('app', None)
-        sys.path[:] = csp
         os.chdir(cwd)
 
 
@@ -58,7 +55,6 @@ def test_build_rel():
         # open(efn, 'wb').write(result)
         assert result.decode() == open(efn, 'rb').read().decode()
     finally:
-        sys.modules.pop('app', None)
         sys.path[:] = csp
         os.chdir(cwd)
 

@@ -46,8 +46,17 @@ def get_doc_content(obj):
     lines = statemachine.string2lines(doc)
     source = inspect.getsourcefile(obj)
     srclines, startline = inspect.getsourcelines(obj)
+    indoc = False
     for add, line in enumerate(srclines):
-        if line.lstrip()[0] in ("'", '"'):
+        line = line.strip()
+        if indoc:
+            if line:
+                startline += add
+                break
+        elif line in ('"""', '"', "'''", "'"):
+            indoc = True
+            continue
+        elif line[0] in ('"', "'"):
             startline += add
             break
 

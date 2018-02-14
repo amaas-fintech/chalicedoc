@@ -45,7 +45,8 @@ def create_user():
     """
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/users',  # split to test get_doc_content
+           methods=['GET'])
 def get_user():
     """
     Get user.
@@ -68,8 +69,7 @@ def no_doc():  # NoQA
 
 @app.route('/refs')
 def xref():
-    """
-    Cross-reference example.
+    """Cross-reference example.
 
     This docstring contains a cross-reference to :chalice:route:`GET /`.
 
