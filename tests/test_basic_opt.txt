@@ -3,7 +3,7 @@
         Testing
     <paragraph>
         Sample chalice app with docstrings.
-    <section ids="root" names="/root/ index">
+    <section ids="index" names="index /root/">
         <title>
             <strong>
                 GET
@@ -17,7 +17,7 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section ids="root-hello-name" names="/root/hello/{name} hello_name">
+    <section ids="hello-name" names="hello_name /root/hello/{name}">
         <title>
             <strong>
                 GET
@@ -36,13 +36,13 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section ids="root-minimal" names="/root/minimal no_doc">
+    <section ids="no-doc" names="no_doc /root/minimal">
         <title>
             <strong>
                 GET
              
             /root/minimal
-    <section ids="root-refs" names="/root/refs xref">
+    <section ids="xref" names="xref /root/refs">
         <title>
             <strong>
                 GET
@@ -71,7 +71,7 @@
         <system_message backrefs="id4" ids="id3" level="3" line="78" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
-    <section dupnames="/root/users" ids="root-users" names="create_user">
+    <section dupnames="/root/users" ids="create-user" names="create_user">
         <title>
             <strong>
                 POST

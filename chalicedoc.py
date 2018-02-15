@@ -137,8 +137,8 @@ class ChaliceBaseDirective(Directive):
             # Necessary so that the child nodes get the right source/line
             section.document = self.state.document
             section['names'].extend([
-                nodes.fully_normalize_name(path),
                 view_function.__name__,
+                nodes.fully_normalize_name(path),
             ])
             self.state.document.note_implicit_target(section, section)
             sid = section['ids'][0]

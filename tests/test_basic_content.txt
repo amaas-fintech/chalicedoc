@@ -3,7 +3,7 @@
         Testing
     <paragraph>
         A simple example.
-    <section ids="index" names="/ index">
+    <section ids="index" names="index /">
         <title>
             <strong>
                 GET
@@ -17,7 +17,7 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section ids="hello-name" names="/hello/{name} hello_name">
+    <section ids="hello-name" names="hello_name /hello/{name}">
         <title>
             <strong>
                 GET
@@ -36,13 +36,13 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section ids="minimal" names="/minimal no_doc">
+    <section ids="no-doc" names="no_doc /minimal">
         <title>
             <strong>
                 GET
              
             /minimal
-    <section ids="refs" names="/refs xref">
+    <section ids="xref" names="xref /refs">
         <title>
             <strong>
                 GET
@@ -71,7 +71,7 @@
         <system_message backrefs="id4" ids="id3" level="3" line="78" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
-    <section dupnames="/users" ids="users" names="create_user">
+    <section dupnames="/users" ids="create-user" names="create_user">
         <title>
             <strong>
                 POST
