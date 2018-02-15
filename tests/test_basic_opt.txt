@@ -3,12 +3,12 @@
         Testing
     <paragraph>
         Sample chalice app with docstrings.
-    <section ids="index" names="/ index">
+    <section ids="root" names="/root/ index">
         <title>
             <strong>
                 GET
              
-            /
+            /root/
         <paragraph>
             Return {'hello': 'world'}.
         <paragraph>
@@ -17,7 +17,7 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section ids="hello-name" names="/hello/{name} hello_name">
+    <section ids="root-hello-name" names="/root/hello/{name} hello_name">
         <title>
             <strong>
                 GET
@@ -25,7 +25,7 @@
             <strong>
                 POST
              
-            /hello/{name}
+            /root/hello/{name}
         <paragraph>
             <literal>
                 '/hello/james' -> {"hello": "james"}
@@ -36,18 +36,18 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section ids="minimal" names="/minimal no_doc">
+    <section ids="root-minimal" names="/root/minimal no_doc">
         <title>
             <strong>
                 GET
              
-            /minimal
-    <section ids="refs" names="/refs xref">
+            /root/minimal
+    <section ids="root-refs" names="/root/refs xref">
         <title>
             <strong>
                 GET
              
-            /refs
+            /root/refs
         <paragraph>
             Cross-reference example.
         <paragraph>
@@ -71,12 +71,12 @@
         <system_message backrefs="id4" ids="id3" level="3" line="78" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
-    <section dupnames="/users" ids="users" names="create_user">
+    <section dupnames="/root/users" ids="root-users" names="create_user">
         <title>
             <strong>
                 POST
              
-            /users
+            /root/users
         <paragraph>
             Create user.
         <paragraph>
@@ -91,12 +91,12 @@
             <paragraph>
                 <literal>
                     {'user': user_as_json}
-    <section dupnames="/users" ids="get-user" names="get_user">
+    <section dupnames="/root/users" ids="get-user" names="get_user">
         <title>
             <strong>
                 GET
              
-            /users
+            /root/users
         <paragraph>
             Get user.
         <paragraph>

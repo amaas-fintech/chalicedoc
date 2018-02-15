@@ -16,9 +16,10 @@ SOURCEFILE = os.path.join(os.path.dirname(__file__), 'test-project', 'sample', '
 RST_DOC = '''
 .. test:: test-project/sample
 '''
-RST_DOC_REL = '''
+RST_DOC_OPT = '''
 .. test:: test-project/sample
    :rel: src
+   :basepath: /root
 
 '''
 RST_DOC_CONTENT = '''
@@ -43,8 +44,8 @@ def test_build():
         os.chdir(cwd)
 
 
-def test_build_rel():
-    """Test a simple rst parse using rel option on project directive."""
+def test_build_opt():
+    """Test a simple rst parse using options on project directive."""
     cwd = os.getcwd()
     csp = copy.copy(sys.path)
     # remove top dir so test fails if option isn't working
@@ -54,8 +55,8 @@ def test_build_rel():
     try:
         directives.register_directive('test', chalicedoc.ProjectDirective)
         test_path = os.path.join(here, 'test.rst')
-        result = docutils.core.publish_string(RST_DOC_REL, source_path=test_path)
-        efn = os.path.join(os.path.dirname(__file__), 'test_basic_rel.txt')
+        result = docutils.core.publish_string(RST_DOC_OPT, source_path=test_path)
+        efn = os.path.join(os.path.dirname(__file__), 'test_basic_opt.txt')
         # open(efn, 'wb').write(result)
         tpl = Template(open(efn, 'rb').read().decode())
         assert result.decode() == tpl.substitute(SOURCEFILE=SOURCEFILE)

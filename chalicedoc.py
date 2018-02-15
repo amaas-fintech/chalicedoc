@@ -74,11 +74,16 @@ def get_content(obj):
 class ChaliceBaseDirective(Directive):
     """Chalice directive baseclass."""
 
-    def build_doc(self, module, app=None):
+    def build_doc(self, module, app=None, basepath=None):
         """Build full docs for Chalice app."""
         if not app:
             # Standard Chalice location
             app = module.app
+
+        if not basepath:
+            basepath = ''
+        elif basepath.endswith('/'):
+            basepath = basepath[:-1]
 
         root = self.build_app_doc(module, app)
         for path in sorted(app.routes):
@@ -91,7 +96,9 @@ class ChaliceBaseDirective(Directive):
 
             for view_function in sorted(inverted_routes, key=lambda f: f.__name__):
                 methods = inverted_routes[view_function]
-                section = self.build_route_doc(sorted(methods), path, view_function)
+                section = self.build_route_doc(
+                    sorted(methods), basepath + path, view_function,
+                )
                 root += section
 
         return [root]
@@ -200,6 +207,7 @@ class ProjectDirective(ChaliceBaseDirective):
     required_arguments = 1
     option_spec = {
         'rel': project_rel_validate,
+        'basepath': str,
     }
     has_content = True
 
@@ -218,7 +226,7 @@ class ProjectDirective(ChaliceBaseDirective):
 
         try:
             with isolated_import('app') as module:
-                return self.build_doc(module)
+                return self.build_doc(module, basepath=self.options.get('basepath'))
         finally:
             if ins:
                 sys.path.pop(0)
@@ -235,13 +243,16 @@ class AppDirective(ChaliceBaseDirective):
     """
 
     optional_arguments = 1
+    option_spec = {
+        'basepath': str,
+    }
     has_content = True
 
     def run(self):
         """Parse chalice app docstrings."""
         name = self.arguments[0] if len(self.arguments) > 0 else 'app'
         with isolated_import(name) as module:
-            return self.build_doc(module)
+            return self.build_doc(module, basepath=self.options.get('basepath'))
 
 
 class ChaliceDomain(Domain):
