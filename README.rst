@@ -30,7 +30,7 @@ This will product output as follows:
 2. The docstring of your module will be included as a summary
 3. For each route:
 
-  a. The path will be added as a section title
-  b. The method will be added as a section subtitle
-  c. The docstring of the corresponding function will be used as the section
-     content
+   a. The path will be added as a section title
+   b. The method will be added as a section subtitle
+   c. The docstring of the corresponding function will be used as the section
+      content
