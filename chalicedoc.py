@@ -10,9 +10,48 @@ import sys
 from docutils import nodes, statemachine
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
+from sphinx import addnodes
 from sphinx.util import docutils, nodes as nodeutils
 from sphinx.domains import Domain, ObjType
 from sphinx.roles import XRefRole
+
+
+class NodeClassMixin(object):
+    """Node mixin class to add css class to output."""
+
+    def __init__(self, *a, **kw):
+        """Run super init, add class name."""
+        super(NodeClassMixin, self).__init__(*a, **kw)
+        classes = self.setdefault('classes', [])
+        classes.append('chalice-{}'.format(type(self).__name__.lower()))
+
+
+class App(NodeClassMixin, nodes.section):
+    """Node for Chalice app."""
+
+
+class AppName(NodeClassMixin, nodes.title):
+    """Node to contain app name."""
+
+
+class Route(NodeClassMixin, nodes.section):
+    """Node for route or group of routes."""
+
+
+class RouteName(NodeClassMixin, nodes.title):
+    """Node to contain route name information (methods + paths)."""
+
+
+class Method(NodeClassMixin, addnodes.desc_annotation):
+    """Node for route method."""
+
+
+class BasePath(NodeClassMixin, addnodes.desc_addname):
+    """Node for route basepath."""
+
+
+class Path(NodeClassMixin, addnodes.desc_name):
+    """Node for route path."""
 
 
 @contextlib.contextmanager
@@ -97,7 +136,8 @@ class ChaliceBaseDirective(Directive):
             for view_function in sorted(inverted_routes, key=lambda f: f.__name__):
                 methods = inverted_routes[view_function]
                 section = self.build_route_doc(
-                    sorted(methods), basepath + path, view_function,
+                    view_function, sorted(methods), path,
+                    basepath=basepath,
                 )
                 root += section
 
@@ -111,9 +151,9 @@ class ChaliceBaseDirective(Directive):
         Body comes from directive content or module docstring.
         """
         # See RSTState.section for regular section creation logic.
-        root = nodes.section()
+        root = App()
         root['names'].append(nodes.fully_normalize_name(app.app_name))
-        root += nodes.title(app.app_name, app.app_name.replace('_', ' ').title())
+        root += AppName(app.app_name, app.app_name.replace('_', ' ').title())
         self.state.document.note_implicit_target(root, root)
         # Add cross-reference
         self.add_xref('app', app.app_name, root['ids'][0])
@@ -129,9 +169,10 @@ class ChaliceBaseDirective(Directive):
 
         return root
 
-    def build_route_doc(self, methods, path, view_function):
+    def build_route_doc(self, view_function, methods, path, basepath=None):
         """Build documentation for an individual route from view_function docstring."""
-        section = nodes.section()
+        basepath = basepath or ''
+        section = Route()
         srccontent, doccontent = get_content(view_function)
         with docutils.switch_source_input(self.state, srccontent):
             # Necessary so that the child nodes get the right source/line
@@ -143,14 +184,19 @@ class ChaliceBaseDirective(Directive):
             self.state.document.note_implicit_target(section, section)
             sid = section['ids'][0]
             # Add title
-            title_src = ' '.join(methods + [path])
-            title = nodes.title(title_src)
+            title_src = ' '.join(methods + [basepath + path])
+            title = RouteName(title_src)
             for method in methods:
-                title += [nodes.strong(method, method), nodes.Text(' ')]
+                mnode = Method(method, method)
+                mnode.setdefault('classes', []).append(method.lower())
+                title += [mnode, nodes.Text(' ')]
                 # ...add cross-reference
-                self.add_xref('route', '{} {}'.format(method, path), sid)
+                self.add_xref('route', '{} {}{}'.format(method, basepath, path), sid)
 
-            title += nodes.Text(path)
+            if basepath:
+                title += BasePath(basepath, basepath)
+
+            title += Path(path, path)
             section += title
             # Add content
             with docutils.switch_source_input(self.state, doccontent):
@@ -373,7 +419,31 @@ class ChaliceDomain(Domain):
     #     return None
 
 
+def _get_visitors(nodecls):
+    for cls in nodecls.mro()[1:]:
+        if issubclass(cls, nodes.Node):
+            parent = cls.__name__
+            break
+    else:
+        raise TypeError('{} is not a subclass of Node'.format(nodecls))
+
+    def visit(self, node):
+        return getattr(self, 'visit_' + parent)(node)
+
+    def depart(self, node):
+        return getattr(self, 'depart_' + parent)(node)
+
+    return visit, depart
+
+
 def setup(app):
     """Sphinx extension setup."""
+    for nodecls in (App, AppName, Route, RouteName, Method, BasePath, Path):
+        funcs = _get_visitors(nodecls)
+        app.add_node(
+            nodecls,
+            html=funcs, latex=funcs, text=funcs, man=funcs, textinfo=funcs,
+        )
+
     app.add_domain(ChaliceDomain)
     return {'version': __version__}
