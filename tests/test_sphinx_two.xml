@@ -4,21 +4,21 @@
 <document source="$SOURCEFILE">
     <section ids="double-trouble" names="double\ trouble">
         <title>Double Trouble</title>
-        <section ids="first" names="first">
-            <title>First</title>
+        <App classes="chalice-app" ids="first" names="first">
+            <AppName classes="chalice-appname">First</AppName>
             <paragraph>A first app.</paragraph>
-            <section ids="index-a" names="index_a /a">
-                <title><strong>GET</strong> /a</title>
+            <Route classes="chalice-route" ids="index-a" names="index_a /a">
+                <RouteName classes="chalice-routename"><MethodList classes="chalice-methodlist"><Method classes="chalice-method get" xml:space="preserve">GET</Method></MethodList> <Path classes="chalice-path" xml:space="preserve">/a</Path></RouteName>
                 <paragraph>Project A.</paragraph>
-            </section>
-        </section>
-        <section ids="second" names="second">
-            <title>Second</title>
+            </Route>
+        </App>
+        <App classes="chalice-app" ids="second" names="second">
+            <AppName classes="chalice-appname">Second</AppName>
             <paragraph>A second app.</paragraph>
-            <section ids="index-b" names="index_b /b">
-                <title><strong>GET</strong> /b</title>
+            <Route classes="chalice-route" ids="index-b" names="index_b /b">
+                <RouteName classes="chalice-routename"><MethodList classes="chalice-methodlist"><Method classes="chalice-method get" xml:space="preserve">GET</Method></MethodList> <Path classes="chalice-path" xml:space="preserve">/b</Path></RouteName>
                 <paragraph>Project B.</paragraph>
-            </section>
-        </section>
+            </Route>
+        </App>
     </section>
 </document>

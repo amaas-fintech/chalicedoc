@@ -1,14 +1,16 @@
-<document ids="testing" names="testing" source="<string>" title="Testing">
-    <title>
+<document classes="chalice-app" ids="testing" names="testing" source="<string>" title="Testing">
+    <AppName classes="chalice-appname">
         Testing
     <paragraph>
         Sample chalice app with docstrings.
-    <section ids="index" names="index /">
-        <title>
-            <strong>
-                GET
+    <Route classes="chalice-route" ids="index" names="index /">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method get" xml:space="preserve">
+                    GET
              
-            /
+            <Path classes="chalice-path" xml:space="preserve">
+                /
         <paragraph>
             Return {'hello': 'world'}.
         <paragraph>
@@ -17,15 +19,17 @@
                 {"hello": "world"}
             
             whenever you make an HTTP GET request to '/'.
-    <section ids="hello-name" names="hello_name /hello/{name}">
-        <title>
-            <strong>
-                GET
+    <Route classes="chalice-route" ids="hello-name" names="hello_name /hello/{name}">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method get" xml:space="preserve">
+                    GET
+                 
+                <Method classes="chalice-method post" xml:space="preserve">
+                    POST
              
-            <strong>
-                POST
-             
-            /hello/{name}
+            <Path classes="chalice-path" xml:space="preserve">
+                /hello/{name}
         <paragraph>
             <literal>
                 '/hello/james' -> {"hello": "james"}
@@ -36,18 +40,22 @@
             <paragraph>
                 <literal>
                     {'hello': name}
-    <section ids="no-doc" names="no_doc /minimal">
-        <title>
-            <strong>
-                GET
+    <Route classes="chalice-route" ids="no-doc" names="no_doc /minimal">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method get" xml:space="preserve">
+                    GET
              
-            /minimal
-    <section ids="xref" names="xref /refs">
-        <title>
-            <strong>
-                GET
+            <Path classes="chalice-path" xml:space="preserve">
+                /minimal
+    <Route classes="chalice-route" ids="xref" names="xref /refs">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method get" xml:space="preserve">
+                    GET
              
-            /refs
+            <Path classes="chalice-path" xml:space="preserve">
+                /refs
         <paragraph>
             Cross-reference example.
         <paragraph>
@@ -71,12 +79,14 @@
         <system_message backrefs="id4" ids="id3" level="3" line="78" source="$SOURCEFILE" type="ERROR">
             <paragraph>
                 Unknown interpreted text role "any".
-    <section dupnames="/users" ids="create-user" names="create_user">
-        <title>
-            <strong>
-                POST
+    <Route classes="chalice-route" dupnames="/users" ids="create-user" names="create_user">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method post" xml:space="preserve">
+                    POST
              
-            /users
+            <Path classes="chalice-path" xml:space="preserve">
+                /users
         <paragraph>
             Create user.
         <paragraph>
@@ -91,12 +101,14 @@
             <paragraph>
                 <literal>
                     {'user': user_as_json}
-    <section dupnames="/users" ids="get-user" names="get_user">
-        <title>
-            <strong>
-                GET
+    <Route classes="chalice-route" dupnames="/users" ids="get-user" names="get_user">
+        <RouteName classes="chalice-routename">
+            <MethodList classes="chalice-methodlist">
+                <Method classes="chalice-method get" xml:space="preserve">
+                    GET
              
-            /users
+            <Path classes="chalice-path" xml:space="preserve">
+                /users
         <paragraph>
             Get user.
         <paragraph>

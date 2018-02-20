@@ -23,7 +23,9 @@ class NodeClassMixin(object):
         """Run super init, add class name."""
         super(NodeClassMixin, self).__init__(*a, **kw)
         classes = self.setdefault('classes', [])
-        classes.append('chalice-{}'.format(type(self).__name__.lower()))
+        name = 'chalice-{}'.format(type(self).__name__.lower())
+        if name not in classes:
+            classes.append(name)
 
 
 class App(NodeClassMixin, nodes.section):
