@@ -42,6 +42,10 @@ class RouteName(NodeClassMixin, nodes.title):
     """Node to contain route name information (methods + paths)."""
 
 
+class MethodList(NodeClassMixin, nodes.inline):
+    """Container node for method list."""
+
+
 class Method(NodeClassMixin, addnodes.desc_annotation):
     """Node for route method."""
 
@@ -186,13 +190,18 @@ class ChaliceBaseDirective(Directive):
             # Add title
             title_src = ' '.join(methods + [basepath + path])
             title = RouteName(title_src)
-            for method in methods:
+            methodlist = MethodList(' '.join(methods))
+            for i, method in enumerate(methods):
                 mnode = Method(method, method)
                 mnode.setdefault('classes', []).append(method.lower())
-                title += [mnode, nodes.Text(' ')]
+                if i > 0:
+                    methodlist += nodes.Text(' ')
+
+                methodlist += mnode
                 # ...add cross-reference
                 self.add_xref('route', '{} {}{}'.format(method, basepath, path), sid)
 
+            title += [methodlist, nodes.Text(' ')]
             if basepath:
                 title += BasePath(basepath, basepath)
 
@@ -438,7 +447,10 @@ def _get_visitors(nodecls):
 
 def setup(app):
     """Sphinx extension setup."""
-    for nodecls in (App, AppName, Route, RouteName, Method, BasePath, Path):
+    for nodecls in (
+        App, AppName,
+        Route, RouteName, MethodList, Method, BasePath, Path
+    ):
         funcs = _get_visitors(nodecls)
         app.add_node(
             nodecls,
