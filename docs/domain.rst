@@ -13,6 +13,7 @@ Project
 
    .. chalice:project:: <project_dir>
       :rel: "cwd" / "src"
+      :basepath: str
 
 Build documentation for Chalice app located in ``project_dir``. Standard chalice
 project layout *project_dir/app.py* is expected.
@@ -25,15 +26,21 @@ cwd (default)
 src
   states path is relative to the directory containing the .rst source file.
 
+The **basepath** option is a string that specifies a path that will be
+prepended to every path in the app.
+
 App
 ~~~
 ::
 
    .. chalice:app:: <module_name>
+      :basepath: str
 
 Build documentation for chalice app, importable at ``module_name``. This assumes
 that the chalice module is already on your system path and can be directly
 imported.
+
+The **basepath** option is the same as for ``chalice:project`` above.
 
 
 Roles
@@ -71,3 +78,7 @@ E.g. a routes defined in your *app.py* as:
 could be referenced using::
 
    :chalice:route:`GET /example`
+
+.. note::
+   If a basepath has been specified on the ``chalice`` directive, then it must
+   be included in the route reference.
