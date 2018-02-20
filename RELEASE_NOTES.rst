@@ -5,6 +5,12 @@ Release Notes
 Version 0.x
 ===========
 
+v0.3 -- 20 Feb 2018
+-------------------
+* Add ``basepath`` option to directives.
+* Extra css classes for elements, enables better custom styling.
+
+
 v0.2.2 -- 14 Feb 2018
 ---------------------
 * File/line reporting more accurately reflects the source location.

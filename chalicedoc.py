@@ -1,5 +1,5 @@
 """Chalicedoc provides a chalice directive for reStructuredText parsing of Chalice apps."""
-__version__ = '0.2.2'
+__version__ = '0.3'
 
 import contextlib
 import importlib
